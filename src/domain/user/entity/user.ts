@@ -9,9 +9,8 @@ export default class User extends Entity {
   private _active: boolean = false;
   private _rewardPoints: number = 0;
 
-  constructor(id: string, name: string, tax_id: string, password: string) {
+  constructor(name: string, tax_id: string, password: string) {
     super();
-    this._id = id;
     this._name = name;
     this._tax_id = tax_id;
     this._password = password;

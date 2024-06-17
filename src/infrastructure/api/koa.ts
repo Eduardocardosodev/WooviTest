@@ -3,12 +3,22 @@ import Router from 'koa-router';
 import mongoose from 'mongoose';
 import { accountRoute } from './routes/account.route';
 import bodyParser from 'koa-bodyparser';
+import dotenv from 'dotenv';
+import { transactionRoute } from './routes/transaction.route';
+dotenv.config();
+const DB_USER = process.env.DB_USER;
+const DB_PASSWORD = process.env.DB_PASSWORD;
 
 const router = new Router();
-export const app = new Koa();
+const app = new Koa();
 
 app.use(bodyParser());
 router.use('/account', accountRoute.routes(), accountRoute.allowedMethods());
+router.use(
+  '/transactions',
+  transactionRoute.routes(),
+  transactionRoute.allowedMethods()
+);
 
 app.use(router.routes());
 app.use(router.allowedMethods());
@@ -16,7 +26,7 @@ app.use(router.allowedMethods());
 async function connectDB() {
   try {
     await mongoose.connect(
-      `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.ingyz5d.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+      `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.ingyz5d.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
     );
     console.log('MongoDB connected');
   } catch (error) {
@@ -26,3 +36,4 @@ async function connectDB() {
 }
 
 connectDB();
+export { app };

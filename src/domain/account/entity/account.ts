@@ -7,19 +7,21 @@ export default class Account extends Entity {
   private _account_number: string = '';
   private _user_id: string = '';
   private _balance: number = 0;
-  private _user!: User;
+  private _user?: User;
 
   constructor(
     id: string,
     account_number: string,
     user_id: string,
-    balance: number
+    balance: number,
+    user?: User
   ) {
     super();
     this._id = id;
     this._account_number = account_number;
     this._user_id = user_id;
     this._balance = balance;
+    this._user = user;
     this.validate();
     if (this.notification.hasErrors()) {
       throw new NotificationError(this.notification.getErrors());

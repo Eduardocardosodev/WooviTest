@@ -1,12 +1,6 @@
 import User from './user';
 
 describe('User unit tests', () => {
-  it('should throw error when id is empty', () => {
-    expect(() => {
-      let user = new User('', 'John', '02461300087', '1234');
-    }).toThrowError('user: Id is required');
-  });
-
   it('should throw error when name is empty', () => {
     expect(() => {
       let user = new User('123', '', '02461300087', '1234');

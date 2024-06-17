@@ -8,14 +8,12 @@ export default class UserYupValidator implements ValidatorInterface<User> {
       yup
         .object()
         .shape({
-          id: yup.string().required('Id is required'),
           name: yup.string().required('Name is required'),
           tax_id: yup.string().required('Tax_id is required'),
           password: yup.string().required('Password is required'),
         })
         .validateSync(
           {
-            id: entity.id,
             name: entity.name,
             tax_id: entity.tax_id,
             password: entity.password,
