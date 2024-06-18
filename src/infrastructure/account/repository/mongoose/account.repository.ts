@@ -12,8 +12,6 @@ export default class AccountRepository implements AccountRepositoryInterface {
       date: new Date(),
     });
 
-    console.log(user);
-
     await AccountModel.create({
       user_id: user.id,
       balance: 0,
@@ -22,7 +20,6 @@ export default class AccountRepository implements AccountRepositoryInterface {
   }
 
   async update(entity: Account | any): Promise<void> {
-    console.log('UPDATE ACCOUNT.REPOSITOY ====', entity);
     await AccountModel.findByIdAndUpdate(entity.id, {
       balance: entity.balance,
     });

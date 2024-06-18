@@ -5,10 +5,11 @@ import { InputCreateTransactionDto } from '../../../usecase/transactions/create/
 import FindTransactionUseCase from '../../../usecase/transactions/find/find.transaction.usecase';
 import ListTransactionUseCase from '../../../usecase/transactions/list/list.transaction.usecase';
 import AccountRepository from '../../account/repository/mongoose/account.repository';
+import { authMiddleware } from '../middlewares/auth';
 
 export const transactionRoute = new Router();
 
-transactionRoute.post('/', async (ctx, next) => {
+transactionRoute.post('/', authMiddleware, async (ctx, next) => {
   const transactionRepository = new TransactionRepository();
   const accountRepository = new AccountRepository();
   const createTransactionUseCase = new CreateTransactionUseCase(
@@ -34,7 +35,7 @@ transactionRoute.post('/', async (ctx, next) => {
     ctx.status = 400;
   }
 });
-transactionRoute.get('/:id', async (ctx, next) => {
+transactionRoute.get('/:id', authMiddleware, async (ctx, next) => {
   const transactionRepository = new TransactionRepository();
   const findTransactionUseCase = new FindTransactionUseCase(
     transactionRepository
@@ -59,7 +60,7 @@ transactionRoute.get('/:id', async (ctx, next) => {
   }
 });
 
-transactionRoute.get('/', async (ctx, next) => {
+transactionRoute.get('/', authMiddleware, async (ctx, next) => {
   const transactionRepository = new TransactionRepository();
   const listTransactionUseCase = new ListTransactionUseCase(
     transactionRepository

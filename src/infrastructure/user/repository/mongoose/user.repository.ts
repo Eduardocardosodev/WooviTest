@@ -30,16 +30,26 @@ export default class UserRepository implements UserRepositoryInterface {
   async find(id: string): Promise<User> {
     let userModel;
     try {
+      userModel = await UserModel.findById(id);
+    } catch (error) {
+      throw new Error('User not found');
+    }
+
+    return new User(userModel.name, userModel.tax_id, userModel.password);
+  }
+
+  async findByTaxId(tax_id: string): Promise<User> {
+    let userModel;
+    console.log('usermodel===', tax_id);
+    try {
       userModel = await UserModel.findOne({
-        where: {
-          id,
-        },
+        tax_id,
       });
     } catch (error) {
       throw new Error('User not found');
     }
 
-    return new User(id, userModel.name, userModel.tax_id, userModel.password);
+    return new User(userModel.name, userModel.tax_id, userModel.password);
   }
 
   async findAll(): Promise<User[]> {
@@ -47,7 +57,6 @@ export default class UserRepository implements UserRepositoryInterface {
 
     const users = userModels.map((userModels) => {
       let user = new User(
-        userModels.id,
         userModels.name,
         userModels.tax_id,
         userModels.password

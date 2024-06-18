@@ -5,6 +5,7 @@ import { accountRoute } from './routes/account.route';
 import bodyParser from 'koa-bodyparser';
 import dotenv from 'dotenv';
 import { transactionRoute } from './routes/transaction.route';
+import { authenticateRoute } from './routes/authenticate.route';
 dotenv.config();
 const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
@@ -18,6 +19,11 @@ router.use(
   '/transactions',
   transactionRoute.routes(),
   transactionRoute.allowedMethods()
+);
+router.use(
+  '/authenticate',
+  authenticateRoute.routes(),
+  authenticateRoute.allowedMethods()
 );
 
 app.use(router.routes());
