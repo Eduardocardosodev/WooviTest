@@ -2,24 +2,19 @@ import Entity from '../../@shared/entity/entity.abstract';
 import NotificationError from '../../@shared/notification/notification.errors';
 import User from '../../user/entity/user';
 import AccountValidatorFactory from '../factory/account.validator.factory';
+import { v4 as uuid } from 'uuid';
 
 export default class Account extends Entity {
   private _account_number: string = '';
   private _user_id: string = '';
   private _balance: number = 0;
-  private _user?: User;
+  private _user: User;
 
-  constructor(
-    id: string,
-    account_number: string,
-    user_id: string,
-    balance: number,
-    user?: User
-  ) {
+  constructor(balance: number, user: User) {
     super();
-    this._id = id;
-    this._account_number = account_number;
-    this._user_id = user_id;
+    this._id = uuid();
+    this._account_number = uuid();
+    this._user_id = user.id;
     this._balance = balance;
     this._user = user;
     this.validate();

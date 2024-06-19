@@ -3,6 +3,8 @@ import AccountRepository from '../../account/repository/mongoose/account.reposit
 import CreateAccountUseCase from '../../../usecase/account/create/create.account.usecase';
 import { InputCreateAccountDto } from '../../../usecase/account/create/create.account.dto';
 import { v4 as uuid } from 'uuid';
+import { authMiddleware } from '../middlewares/auth';
+import FindAccountUseCase from '../../../usecase/account/find/find.account.usecase';
 
 export const accountRoute = new Router();
 
@@ -15,8 +17,6 @@ accountRoute.post('/', async (ctx, next) => {
 
   try {
     const output = await createaccountUseCase.execute({
-      account_number: uuid(),
-      user_id: '1234',
       balance: input.balance,
       user: {
         name: input.user.name,
@@ -38,15 +38,25 @@ accountRoute.post('/', async (ctx, next) => {
   }
 });
 
-//   accountRoute.get('/', async (ctx, next) => {
-// //   const usecase = new ListCustomerUseCase(new CustomerRepository());
-// //   const output = await usecase.execute({});
-// const id = parseInt(ctx.params.id);
+accountRoute.get('/:id', authMiddleware, async (ctx, next) => {
+  const accountRepository = new AccountRepository();
+  const findAccountUseCase = new FindAccountUseCase(accountRepository);
 
-//   ctx.response.('hello')
+  const { id } = ctx.params;
 
-// //   res.format({
-// //     json: async () => res.send(output),
-// //     xml: async () => res.send(CustomerPresenter.toXML(output)),
-// //   });
-// });
+  try {
+    const output = await findAccountUseCase.execute({ id });
+    ctx.body = {
+      message: 'Account find successfully',
+      data: output,
+    };
+    ctx.status = 200;
+  } catch (error: any) {
+    ctx.body = {
+      message: 'Error finding account',
+      error: error.message,
+    };
+    console.log(console.log(error));
+    ctx.status = 400;
+  }
+});

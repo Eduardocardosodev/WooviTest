@@ -1,5 +1,7 @@
+import mongoose from 'mongoose';
 import Account from '../../../../domain/account/entity/account';
 import AccountRepositoryInterface from '../../../../domain/account/repository/account-repository.interface';
+import User from '../../../../domain/user/entity/user';
 import { UserModel } from '../../../user/repository/mongoose/user.model';
 import { AccountModel } from './account.model';
 
@@ -14,46 +16,49 @@ export default class AccountRepository implements AccountRepositoryInterface {
 
     await AccountModel.create({
       user_id: user.id,
-      balance: 0,
+      account_number: entity.account_number,
+      balance: entity.balance,
       date: new Date(),
     });
   }
 
   async update(entity: Account | any): Promise<void> {
-    await AccountModel.findByIdAndUpdate(entity.id, {
-      balance: entity.balance,
-    });
+    await AccountModel.findByIdAndUpdate(
+      entity.id,
+      { balance: entity.balance },
+      { new: true } // Retorna o documento atualizado
+    );
   }
 
-  async find(id: string): Promise<Account> {
+  async find(id: string): Promise<Account | null> {
     let accountModel;
-    try {
-      accountModel = await AccountModel.findById(id);
-    } catch (error) {
-      throw new Error('Account not found');
-    }
 
-    return new Account(
-      id,
-      accountModel.account_number,
-      accountModel.user_id,
-      Number(accountModel.balance)
-    );
+    accountModel = await AccountModel.findById(id);
+
+    const userModel = await UserModel.findById(accountModel.user_id);
+
+    const user = new User(userModel.name, userModel.tax_id, userModel.password);
+    return new Account(Number(accountModel.balance), user);
   }
 
   async findAll(): Promise<Account[]> {
     const accountModels = await AccountModel.find();
 
-    const accounts = accountModels.map((accountModels) => {
-      let account = new Account(
-        accountModels.id,
-        accountModels.account_number,
-        accountModels.user_id,
-        Number(accountModels.balance)
-      );
+    const accounts = await Promise.all(
+      accountModels.map(async (accountModel) => {
+        const userModel = await UserModel.findById(accountModel.user_id).exec();
+        if (!userModel) {
+          throw new Error('User not found');
+        }
 
-      return account;
-    });
+        const user = new User(
+          userModel.name,
+          userModel.tax_id,
+          userModel.password
+        );
+        return new Account(Number(accountModel.balance), user);
+      })
+    );
 
     return accounts;
   }

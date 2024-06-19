@@ -11,15 +11,11 @@ export default class AccountYupValidator
         .object()
         .shape({
           id: yup.string().required('Id is required'),
-          account_number: yup.string().required('Account number is required'),
-          user_id: yup.string().required('User Id is required'),
           balance: yup.string().required('Balance is required'),
         })
         .validateSync(
           {
             id: entity.id,
-            account_number: entity.account_number,
-            user_id: entity.user_id,
             balance: entity.balance,
           },
           {

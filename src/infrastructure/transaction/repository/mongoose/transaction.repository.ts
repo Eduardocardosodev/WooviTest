@@ -15,36 +15,10 @@ export default class TransactionRepository
     });
   }
 
-  async update(entity: Transaction): Promise<void> {
-    await TransactionModel.updateOne(
-      {
-        sender: entity.sender,
-        receiver: entity.receiver,
-        value: entity.value,
-      },
-      {
-        where: {
-          id: entity.id,
-        },
-      }
-    );
-  }
+  async update(entity: Transaction): Promise<void> {}
 
   async find(id: string): Promise<Transaction> {
-    let transactionModel;
-    console.log('id ===', id);
-    try {
-      transactionModel = await TransactionModel.findById(id);
-    } catch (error) {
-      throw new Error('Transaction not found');
-    }
-
-    return new Transaction(
-      id,
-      transactionModel.sender,
-      transactionModel.receiver,
-      Number(transactionModel.value)
-    );
+    return await TransactionModel.findById(id);
   }
 
   async findAll(): Promise<Transaction[]> {

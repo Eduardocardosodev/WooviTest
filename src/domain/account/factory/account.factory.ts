@@ -17,7 +17,7 @@ export default class AccountFactory {
     balance: number,
     user: User
   ): Account {
-    const account = new Account(uuid(), account_number, user_id, balance);
+    const account = new Account(uuid(), account_number, user_id, balance, user);
     account.changeUser(user);
     return account;
   }

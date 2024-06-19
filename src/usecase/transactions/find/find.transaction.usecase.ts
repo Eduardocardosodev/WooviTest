@@ -14,9 +14,9 @@ export default class FindTransactionUseCase {
   async execute(
     input: InputFindTransactionDto
   ): Promise<OutputFindTransactionDto> {
-    console.log(input);
-
     const transaction = await this.transactionRepository.find(input.id);
+
+    if (!transaction) throw new Error('Transaction not found');
 
     return {
       id: transaction.id,

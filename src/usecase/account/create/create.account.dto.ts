@@ -1,6 +1,4 @@
 export interface InputCreateAccountDto {
-  account_number: string;
-  user_id: string;
   balance: number;
   user: {
     name: string;

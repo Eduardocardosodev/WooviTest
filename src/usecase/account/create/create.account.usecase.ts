@@ -6,6 +6,7 @@ import {
 import AccountFactory from '../../../domain/account/factory/account.factory';
 import User from '../../../domain/user/entity/user';
 import { hash } from 'bcryptjs';
+import Account from '../../../domain/account/entity/account';
 
 export default class CreateAccountUseCase {
   private accountRepository: AccountRepositoryInterface;
@@ -17,12 +18,9 @@ export default class CreateAccountUseCase {
   async execute(input: InputCreateAccountDto): Promise<OutputCreateAccountDto> {
     const password_hash = await hash(input.user.password, 6);
 
-    const account = AccountFactory.createWithUser(
-      input.account_number,
-      input.user_id,
-      input.balance,
-      new User(input.user.name, input.user.tax_id, password_hash)
-    );
+    const user = new User(input.user.name, input.user.tax_id, password_hash);
+
+    const account = new Account(input.balance, user);
 
     await this.accountRepository.create(account);
 
