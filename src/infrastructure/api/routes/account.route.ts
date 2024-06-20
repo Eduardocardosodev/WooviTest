@@ -45,7 +45,7 @@ accountRoute.get('/:id', authMiddleware, async (ctx, next) => {
   const { id } = ctx.params;
 
   try {
-    const output = await findAccountUseCase.execute({ id });
+    const output = await findAccountUseCase.execute(id);
     ctx.body = {
       message: 'Account find successfully',
       data: output,

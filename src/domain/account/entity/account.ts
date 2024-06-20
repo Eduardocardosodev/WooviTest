@@ -47,8 +47,8 @@ export default class Account extends Entity {
     this._user = user;
   }
 
-  addRewardPoints(cash: number) {
-    this._balance += cash;
+  addBalance(balance: number) {
+    this._balance += balance;
   }
 
   set User(user: User) {

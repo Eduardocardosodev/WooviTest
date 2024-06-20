@@ -22,6 +22,8 @@ export default class TransactionRepository
   }
 
   async findAll(): Promise<Transaction[]> {
+    let transactionCompleted: Transaction[] = [];
+
     const transactionModels = await TransactionModel.find();
 
     const transactions = transactionModels.map((transactionModels) => {
@@ -32,9 +34,9 @@ export default class TransactionRepository
         Number(transactionModels.value)
       );
 
-      return transaction;
+      transactionCompleted.push(transaction);
     });
 
-    return transactions;
+    return transactionCompleted;
   }
 }

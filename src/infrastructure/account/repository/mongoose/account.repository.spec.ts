@@ -33,8 +33,8 @@ describe('Account repository test', () => {
 
   it('should create a Account', async () => {
     const userRepository = new UserRepository();
-    const user = new User('123', '1234', '12345', 'password');
-    const account = new Account('123', '1234', '12345', 10, user);
+    const user = new User('1234', '12345', 'password');
+    const account = new Account(10, user);
 
     console.log(account);
 
@@ -59,10 +59,12 @@ describe('Account repository test', () => {
   });
 
   it('should find all Accounts', async () => {
-    const accountRepository = new AccountRepository();
-    const account1 = new Account('123', '1234', '12345', 10);
+    const user = new User('1234', '12345', 'password');
 
-    const account2 = new Account('1234', '12345', '123456', 100);
+    const accountRepository = new AccountRepository();
+    const account1 = new Account(10, user);
+
+    const account2 = new Account(100, user);
 
     await accountRepository.create(account1);
     await accountRepository.create(account2);

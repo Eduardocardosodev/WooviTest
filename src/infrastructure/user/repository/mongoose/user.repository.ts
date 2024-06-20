@@ -41,11 +41,12 @@ export default class UserRepository implements UserRepositoryInterface {
   async findByTaxId(tax_id: string): Promise<User> {
     let userModel;
     console.log('usermodel===', tax_id);
-    try {
-      userModel = await UserModel.findOne({
-        tax_id,
-      });
-    } catch (error) {
+
+    userModel = await UserModel.findOne({
+      tax_id,
+    });
+
+    if (!userModel) {
       throw new Error('User not found');
     }
 

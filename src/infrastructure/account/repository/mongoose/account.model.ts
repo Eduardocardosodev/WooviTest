@@ -2,6 +2,13 @@ import mongoose from 'mongoose';
 import { Schema } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
+export interface AccountSchemaGraphql {
+  id?: any;
+  account_number: string;
+  user_id: string;
+  balance: number;
+}
+
 interface IAccount extends Document {
   account_number: string;
   user_id: string;

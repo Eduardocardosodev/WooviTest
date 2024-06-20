@@ -1,9 +1,13 @@
 import mongoose from 'mongoose';
 import { Schema, Document } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-
+export interface UserSchemaGraphql {
+  id: string; // UUID
+  name: string;
+  tax_id: string;
+  password: string;
+}
 interface IUser extends Document {
-  _id: string; // UUID
   name: string;
   tax_id: string;
   password: string;

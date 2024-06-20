@@ -22,6 +22,8 @@ export default class CreateAccountUseCase {
 
     const account = new Account(input.balance, user);
 
+    console.log('ACCOUNT EXECUTE ===', account);
+
     await this.accountRepository.create(account);
 
     return {
