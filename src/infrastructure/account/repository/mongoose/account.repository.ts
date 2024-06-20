@@ -6,8 +6,6 @@ import { AccountModel } from './account.model';
 
 export default class AccountRepository implements AccountRepositoryInterface {
   async create(entity: Account): Promise<void> {
-    console.log('ENTITY REPOSITRYPO ====', entity);
-
     const user = await UserModel.create({
       name: entity.user.name,
       tax_id: entity.user.tax_id,

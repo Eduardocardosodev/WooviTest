@@ -14,7 +14,6 @@ class AuthController {
     @Arg('password') password: string,
     @Ctx() context: { userRepository: UserRepositoryInterface }
   ) {
-    console.log(tax_id);
     const { userRepository } = context;
 
     const user = await userRepository.findByTaxId(tax_id);

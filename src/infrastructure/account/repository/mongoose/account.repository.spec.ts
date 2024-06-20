@@ -36,8 +36,6 @@ describe('Account repository test', () => {
     const user = new User('1234', '12345', 'password');
     const account = new Account(10, user);
 
-    console.log(account);
-
     const accountModel = await AccountModel.findOne({
       where: { id: '123' },
     });

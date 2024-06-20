@@ -13,10 +13,7 @@ authenticateRoute.post('/', async (ctx, next) => {
   try {
     const userRepository = new UserRepository();
     const authenticateUseCase = new AuthenticateUseCase(userRepository);
-    console.log('ÇHEGUEI AQUI');
     const authenticateUser = await authenticateUseCase.execute(input);
-
-    console.log('usuario atuhetnticado ====', authenticateUser.user);
 
     ctx.body = {
       user: authenticateUser.user,
