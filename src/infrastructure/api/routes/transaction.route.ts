@@ -67,7 +67,7 @@ transactionRoute.get('/', authMiddleware, async (ctx, next) => {
   );
 
   try {
-    const output = await listTransactionUseCase.execute({});
+    const output = await listTransactionUseCase.execute();
     ctx.body = {
       message: 'Transaction list successfully',
       data: output,

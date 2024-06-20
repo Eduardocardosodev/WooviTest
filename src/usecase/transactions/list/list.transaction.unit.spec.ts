@@ -21,17 +21,17 @@ describe('Unit Test for listing transaction use case', () => {
     const repository = MockRepository();
     const usecase = new ListTransactionUseCase(repository);
 
-    const output = await usecase.execute({});
+    const output = await usecase.execute();
 
-    expect(output.transactions.length).toBe(2);
-    expect(output.transactions[0].id).toBe(transaction1.id);
+    expect(output.length).toBe(2);
+    expect(output[0].id).toBe(transaction1.id);
 
-    expect(output.transactions[0].sender).toBe(transaction1.sender);
+    expect(output[0].sender).toBe(transaction1.sender);
 
-    expect(output.transactions[0].receiver).toBe(transaction1.receiver);
+    expect(output[0].receiver).toBe(transaction1.receiver);
 
-    expect(output.transactions[1].id).toBe(transaction2.id);
-    expect(output.transactions[1].sender).toBe(transaction2.sender);
-    expect(output.transactions[1].receiver).toBe(transaction2.receiver);
+    expect(output[1].id).toBe(transaction2.id);
+    expect(output[1].sender).toBe(transaction2.sender);
+    expect(output[1].receiver).toBe(transaction2.receiver);
   });
 });

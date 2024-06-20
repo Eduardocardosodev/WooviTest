@@ -1,3 +1,4 @@
+import CreateAccountUseCase from '../../account/create/create.account.usecase';
 import CreateTransactionUseCase from './create.transaction.usecase';
 
 const input = {
@@ -17,8 +18,11 @@ const MockRepository = () => {
 describe('Unit Test create transaction use case', () => {
   it('should create a transaction', async () => {
     const transactionRepository = MockRepository();
+    const accountRepository = MockRepository();
+
     const transactionCreateUseCase = new CreateTransactionUseCase(
-      transactionRepository
+      transactionRepository,
+      accountRepository
     );
 
     const output = await transactionCreateUseCase.execute(input);
@@ -33,8 +37,11 @@ describe('Unit Test create transaction use case', () => {
 
   it('should thrown an error when sender is missing', async () => {
     const transactionRepository = MockRepository();
+    const accountRepository = MockRepository();
+
     const transactionCreateUseCase = new CreateTransactionUseCase(
-      transactionRepository
+      transactionRepository,
+      accountRepository
     );
 
     input.sender = '';
@@ -46,8 +53,11 @@ describe('Unit Test create transaction use case', () => {
 
   it('should thrown an error when receeiver is missing', async () => {
     const transactionRepository = MockRepository();
+    const accountRepository = MockRepository();
+
     const transactionCreateUseCase = new CreateTransactionUseCase(
-      transactionRepository
+      transactionRepository,
+      accountRepository
     );
 
     input.receiver = '';

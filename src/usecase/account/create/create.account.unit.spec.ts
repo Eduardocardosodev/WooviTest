@@ -1,11 +1,8 @@
 import CreateAccountUseCase from './create.account.usecase';
 
 const input = {
-  account_number: '1234',
-  user_id: '123',
   balance: 10,
   user: {
-    id: '12',
     name: 'Jhon',
     tax_id: '02461300087',
     password: '123456',
@@ -29,27 +26,16 @@ describe('Unit Test create account use case', () => {
 
     expect(output).toEqual({
       id: expect.any(String),
-      account_number: '1234',
-      user_id: '123',
+      account_number: expect.any(String),
+      user_id: expect.any(String),
       balance: 10,
       user: {
-        id: '12',
+        id: expect.any(String),
         name: 'Jhon',
         tax_id: '02461300087',
-        password: '123456',
+        password: expect.any(String),
       },
     });
-  });
-
-  it('should thrown an error when account_number is missing', async () => {
-    const accountRepository = MockRepository();
-    const accountCreateUseCase = new CreateAccountUseCase(accountRepository);
-
-    input.account_number = '';
-
-    await expect(accountCreateUseCase.execute(input)).rejects.toThrow(
-      'Account number is required'
-    );
   });
 
   it('should thrown an error when user name is missing', async () => {

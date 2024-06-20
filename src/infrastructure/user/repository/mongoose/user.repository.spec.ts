@@ -2,21 +2,26 @@ import mongoose, { Mongoose } from 'mongoose';
 import UserRepository from './user.repository';
 import User from '../../../../domain/user/entity/user';
 import { UserModel } from './user.model';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
-
+async function connectDb() {
+  try {
+    await mongoose.connect(
+      `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.ingyz5d.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+    );
+    console.log('MongoDB connected');
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    process.exit(1);
+  }
+}
 describe('User repository test', () => {
   beforeAll(async () => {
-    try {
-      await mongoose.connect(
-        `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.ingyz5d.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
-      );
-      console.log('MongoDB connected');
-    } catch (error) {
-      console.error('MongoDB connection error:', error);
-      process.exit(1);
-    }
+    await connectDb();
   });
 
   afterEach(async () => {
@@ -29,7 +34,7 @@ describe('User repository test', () => {
 
   it('should create a User', async () => {
     const userRepository = new UserRepository();
-    const user = new User('123', '1234', '12345', 'password');
+    const user = new User('Eduardo', '12345', 'password');
     await userRepository.create(user);
 
     const userModel = await UserModel.findOne({
@@ -46,7 +51,7 @@ describe('User repository test', () => {
 
   it('should find a User', async () => {
     const userRepository = new UserRepository();
-    const user = new User('123', '1234', '12345', 'password');
+    const user = new User('Eduardo', '12345', 'password');
     await userRepository.create(user);
 
     const userResult = await userRepository.find(user.id);
@@ -59,14 +64,14 @@ describe('User repository test', () => {
 
     expect(async () => {
       await userRepository.find('456ABC');
-    }).rejects.toThrow('user not found');
+    }).rejects.toThrow('User not found');
   });
 
   it('should find all users', async () => {
     const userRepository = new UserRepository();
-    const user1 = new User('123', '1234', '12345', 'password');
+    const user1 = new User('Eduardo', '12345', 'password');
 
-    const user2 = new User('1234', '12345', '123456', 'password');
+    const user2 = new User('Eduardo', '12345', 'password');
 
     await userRepository.create(user1);
     await userRepository.create(user2);

@@ -12,11 +12,9 @@ export default class ListTransactionUseCase {
     this.transactionRepository = transactionRepository;
   }
 
-  async execute(
-    input: InputListTransactionDto
-  ): Promise<OutputListTransactionDto> {
+  async execute(): Promise<Transaction[]> {
     const transactions = await this.transactionRepository.findAll();
-    return OutputMapper.toOutput(transactions);
+    return transactions;
   }
 }
 

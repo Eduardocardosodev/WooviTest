@@ -8,8 +8,8 @@ export default class FindAccountUseCase {
     this.accountRepository = accountRepository;
   }
 
-  async execute(input: InputFindAccountDto): Promise<OutputFindAccountDto> {
-    const account = await this.accountRepository.find(input.id);
+  async execute(id: string): Promise<OutputFindAccountDto> {
+    const account = await this.accountRepository.find(id);
 
     if (!account) throw new Error('Account not found');
 
