@@ -3,6 +3,7 @@ import Router from 'koa-router';
 import { accountRoute } from './routes/account.route';
 import bodyParser from 'koa-bodyparser';
 import dotenv from 'dotenv';
+import http from 'http';
 import { transactionRoute } from './routes/transaction.route';
 import { authenticateRoute } from './routes/authenticate.route';
 dotenv.config();
@@ -24,4 +25,7 @@ router.use(
 );
 app.use(router.routes());
 app.use(router.allowedMethods());
-export { app };
+
+const server = http.createServer(app.callback());
+
+export { server as app };
