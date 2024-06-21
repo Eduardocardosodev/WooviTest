@@ -4,6 +4,7 @@ import CreateAccountUseCase from '../../../usecase/account/create/create.account
 import { InputCreateAccountDto } from '../../../usecase/account/create/create.account.dto';
 import FindAccountUseCase from '../../../usecase/account/find/find.account.usecase';
 import { authMiddlewareRoutes } from '../middlewares/authRoutes';
+import ListAccountUseCase from '../../../usecase/account/list/list.account.usecase';
 
 export const accountRoute = new Router();
 
@@ -55,7 +56,28 @@ accountRoute.get('/:id', authMiddlewareRoutes, async (ctx, next) => {
       message: 'Error finding account',
       error: error.message,
     };
-    console.log(console.log(error));
+    console.log(error);
+    ctx.status = 400;
+  }
+});
+
+accountRoute.get('/', authMiddlewareRoutes, async (ctx, next) => {
+  const accountRepository = new AccountRepository();
+  const listAccountUseCase = new ListAccountUseCase(accountRepository);
+
+  try {
+    const output = await listAccountUseCase.execute();
+    ctx.body = {
+      message: 'Account list successfully',
+      data: output,
+    };
+    ctx.status = 200;
+  } catch (error: any) {
+    ctx.body = {
+      message: 'Error listing account',
+      error: error.message,
+    };
+    console.log(error);
     ctx.status = 400;
   }
 });

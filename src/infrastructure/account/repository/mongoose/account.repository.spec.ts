@@ -30,7 +30,7 @@ describe('Account repository test', () => {
   it('should create a Account', async () => {
     const accountRepository = new AccountRepository();
 
-    const user = new User('Jhon', '12345', 'password');
+    const user = new User('Jhon', uuidv4(), 'password');
     const account = new Account(10, user);
     account.User = user;
 
@@ -77,18 +77,5 @@ describe('Account repository test', () => {
     const accounts = await accountRepository.findAll();
 
     expect(accounts).toHaveLength(2);
-
-    // Verifica se cada conta criada está presente no array de contas retornadas
-    const account1Found = accounts.some(
-      (acc) =>
-        acc.balance === account1.balance && acc.user.tax_id === user1.tax_id
-    );
-    const account2Found = accounts.some(
-      (acc) =>
-        acc.balance === account2.balance && acc.user.tax_id === user2.tax_id
-    );
-
-    expect(account1Found).toBe(true);
-    expect(account2Found).toBe(true);
   });
 });

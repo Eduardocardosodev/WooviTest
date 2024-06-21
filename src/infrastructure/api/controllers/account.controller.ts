@@ -14,15 +14,15 @@ import { Length } from 'class-validator';
 
 @InputType()
 class UserInput {
-  @Field()
+  @Field(() => String)
   @Length(1, 50)
   name: string;
 
-  @Field()
+  @Field(() => String)
   @Length(1, 50)
   tax_id: string;
 
-  @Field()
+  @Field(() => String)
   @Length(4, 20)
   password: string;
 }

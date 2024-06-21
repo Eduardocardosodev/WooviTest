@@ -5,19 +5,22 @@ const input = {
   receiver: 'existingReceiverAccountId',
   value: 10,
 };
-
 const MockRepository = () => {
   return {
     find: jest.fn().mockImplementation((id: string) => {
       if (id === 'existingSenderAccountId') {
         return {
-          id: 'existingSenderAccountId',
-          balance: 100,
+          accountModel: {
+            id: 'existingSenderAccountId',
+            balance: 100,
+          },
         };
       } else if (id === 'existingReceiverAccountId') {
         return {
-          id: 'existingReceiverAccountId',
-          balance: 50,
+          accountModel: {
+            id: 'existingReceiverAccountId',
+            balance: 50,
+          },
         };
       }
       return null;

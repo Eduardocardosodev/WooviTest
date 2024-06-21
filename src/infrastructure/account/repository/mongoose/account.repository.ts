@@ -1,8 +1,9 @@
 import Account from '../../../../domain/account/entity/account';
 import AccountRepositoryInterface from '../../../../domain/account/repository/account-repository.interface';
-import User from '../../../../domain/user/entity/user';
+import { OutputFindAccountDtoDb } from '../../../../usecase/account/find/find.account.dto';
 import { UserModel } from '../../../user/repository/mongoose/user.model';
 import { AccountModel } from './account.model';
+import { OutputFindAllAccountDto } from './account.repository.dto';
 
 export default class AccountRepository implements AccountRepositoryInterface {
   async create(entity: Account): Promise<void> {
@@ -29,39 +30,51 @@ export default class AccountRepository implements AccountRepositoryInterface {
     });
   }
 
-  async find(id: string): Promise<Account | null> {
-    try {
-      let accountModel;
+  async find(id: string): Promise<OutputFindAccountDtoDb | null> {
+    const accountModel = await AccountModel.findById(id);
 
-      accountModel = await AccountModel.findById(id);
+    const userModel = await UserModel.findById(accountModel?.user_id);
 
-      const userModel = await UserModel.findById(accountModel.user_id);
-
-      const user = new User(
-        userModel.name,
-        userModel.tax_id,
-        userModel.password
-      );
-      return new Account(Number(accountModel.balance), user);
-    } catch (error: any) {
-      console.log(error.message);
+    if (!accountModel) {
       throw new Error('Account not found');
     }
+    return {
+      accountModel: {
+        id: accountModel._id,
+        account_number: accountModel.account_number,
+        user_id: accountModel.user_id,
+        balance: Number(accountModel.balance),
+      },
+      userModel: {
+        id: String(userModel._id),
+        name: userModel.name,
+        tax_id: userModel.tax_id,
+        password: userModel.password,
+      },
+    };
   }
 
-  async findAll(): Promise<Account[]> {
+  async findAll(): Promise<{ account: OutputFindAllAccountDto }[]> {
     const accountModels = await AccountModel.find();
-    let accountWithUsers: Account[] = [];
+    let accountWithUsers: { account: OutputFindAllAccountDto }[] = [];
 
     await Promise.all(
       accountModels.map(async (accountModel) => {
         const userModel = await UserModel.findById(accountModel.user_id).exec();
-        const user = new User(
-          userModel.name,
-          userModel.tax_id,
-          userModel.password
-        );
-        const completed = new Account(Number(accountModel.balance), user);
+        const completed: { account: OutputFindAllAccountDto } = {
+          account: {
+            id: accountModel._id.toString(),
+            account_number: accountModel.account_number,
+            balance: Number(accountModel.balance),
+            user_id: accountModel.user_id.toString(),
+            user: {
+              id: String(userModel!._id),
+              name: userModel!.name,
+              tax_id: userModel!.tax_id,
+              password: userModel!.password,
+            },
+          },
+        };
         accountWithUsers.push(completed);
       })
     );

@@ -7,13 +7,13 @@ export class AccountSchema implements AccountSchemaGraphql {
   @Field((type) => ID, { nullable: true })
   id: any;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   account_number: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   user_id: string;
 
-  @Field({ nullable: false })
+  @Field(() => Number, { nullable: false })
   balance: number;
 
   @Field((type) => UserSchema, { nullable: false })

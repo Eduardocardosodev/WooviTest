@@ -49,7 +49,7 @@ describe('transaction repository test', () => {
 
     expect(transactionResult.sender).toBe(transaction.sender);
     expect(transactionResult.receiver).toBe(transaction.receiver);
-    expect(transactionResult.value).toBe(transaction.value);
+    expect(Number(transactionResult.value)).toBe(Number(transaction.value));
   });
 
   it('should throw an error when transaction is not found', async () => {
@@ -73,11 +73,10 @@ describe('transaction repository test', () => {
 
     // Mapeando os usuários para um formato de objeto simples
     const transactionObjects = transactions.map((transaction) => ({
-      _id: transaction.id,
-      sender: transaction.sender,
-      receiver: transaction.receiver,
-      value: transaction.value,
-      notification: transaction.notification,
+      _id: transaction.transactions.id,
+      sender: transaction.transactions.sender,
+      receiver: transaction.transactions.receiver,
+      value: transaction.transactions.value,
     }));
 
     expect(transactionObjects).toHaveLength(2);

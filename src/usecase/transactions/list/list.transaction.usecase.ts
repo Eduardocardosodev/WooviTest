@@ -12,21 +12,22 @@ export default class ListTransactionUseCase {
     this.transactionRepository = transactionRepository;
   }
 
-  async execute(): Promise<Transaction[]> {
+  async execute(): Promise<OutputListTransactionDto[]> {
     const transactions = await this.transactionRepository.findAll();
+    if (transactions.length === 0) throw new Error('Transaction not found');
     return transactions;
   }
 }
 
-class OutputMapper {
-  static toOutput(transaction: Transaction[]): OutputListTransactionDto {
-    return {
-      transactions: transaction.map((transaction) => ({
-        id: transaction.id,
-        sender: transaction.sender,
-        receiver: transaction.receiver,
-        value: transaction.value,
-      })),
-    };
-  }
-}
+// class OutputMapper {
+//   static toOutput(transaction: Transaction[]): OutputListTransactionDto {
+//     return {
+//       transactions: transaction.map((transaction) => ({
+//         id: transaction.id,
+//         sender: transaction.sender,
+//         receiver: transaction.receiver,
+//         value: transaction.value,
+//       })),
+//     };
+//   }
+// }

@@ -8,7 +8,7 @@ interface IAuth {
 
 @ObjectType()
 class AuthSchema implements IAuth {
-  @Field({ nullable: false })
+  @Field(() => String, { nullable: false })
   token: string;
 
   @Field((type) => AccountSchema, { nullable: true })

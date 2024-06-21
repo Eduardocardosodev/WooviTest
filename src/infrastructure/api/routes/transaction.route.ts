@@ -55,7 +55,7 @@ transactionRoute.get('/:id', authMiddlewareRoutes, async (ctx, next) => {
       message: 'Error finding transaction',
       error: error.message,
     };
-    console.log(console.log(error));
+    console.log(error);
     ctx.status = 400;
   }
 });
@@ -78,7 +78,7 @@ transactionRoute.get('/', authMiddlewareRoutes, async (ctx, next) => {
       message: 'Error listing transaction',
       error: error.message,
     };
-    console.log(console.log(error));
+    console.log(error);
     ctx.status = 400;
   }
 });

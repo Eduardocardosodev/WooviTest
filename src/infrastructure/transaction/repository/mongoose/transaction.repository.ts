@@ -1,6 +1,7 @@
 import Transaction from '../../../../domain/transaction/entity/transaction';
 import TransactionRepositoryInterface from '../../../../domain/transaction/repository/transaction-repository.interface';
 import { TransactionModel } from './transaction.model';
+import { OutputFindAllTransactionDto } from './transaction.repository.dto';
 
 export default class TransactionRepository
   implements TransactionRepositoryInterface
@@ -17,33 +18,31 @@ export default class TransactionRepository
 
   async update(entity: Transaction): Promise<void> {}
 
-  async find(id: string): Promise<Transaction> {
+  async find(id: string): Promise<any> {
     const transaction = await TransactionModel.findById(id);
 
     if (!transaction) throw new Error('Transaction not found');
 
-    return new Transaction(
-      transaction.sender,
-      transaction.receiver,
-      Number(transaction.value)
-    );
+    return transaction;
   }
 
-  async findAll(): Promise<Transaction[]> {
-    let transactionCompleted: Transaction[] = [];
+  async findAll(): Promise<{ transactions: OutputFindAllTransactionDto }[]> {
+    const transactionsModel = await TransactionModel.find();
+    let transactionFormated: { transactions: OutputFindAllTransactionDto }[] =
+      [];
 
-    const transactionModels = await TransactionModel.find();
-
-    const transactions = transactionModels.map((transactionModels) => {
-      let transaction = new Transaction(
-        transactionModels.sender,
-        transactionModels.receiver,
-        Number(transactionModels.value)
-      );
-
-      transactionCompleted.push(transaction);
+    transactionsModel.map((transactionModel) => {
+      const result: { transactions: OutputFindAllTransactionDto } = {
+        transactions: {
+          id: transactionModel._id,
+          sender: transactionModel.sender,
+          receiver: transactionModel.receiver,
+          value: Number(transactionModel.value),
+        },
+      };
+      transactionFormated.push(result);
     });
 
-    return transactionCompleted;
+    return transactionFormated;
   }
 }

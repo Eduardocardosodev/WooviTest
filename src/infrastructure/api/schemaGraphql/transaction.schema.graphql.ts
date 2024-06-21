@@ -6,12 +6,12 @@ export class TransactionSchema implements TransactionSchemaGraphql {
   @Field((type) => ID, { nullable: true })
   id: any;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   sender: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   receiver: string;
 
-  @Field({ nullable: false })
+  @Field(() => Number, { nullable: false })
   value: number;
 }

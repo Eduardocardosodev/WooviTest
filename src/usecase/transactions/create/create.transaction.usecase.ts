@@ -30,22 +30,27 @@ export default class CreateTransactionUseCase {
     const accountSender = await this.accountRepository.find(input.sender);
     const accountReceiver = await this.accountRepository.find(input.receiver);
 
-    if (!accountSender) throw new Error('Sender account not found');
+    if (!accountSender.accountModel)
+      throw new Error('Sender account not found');
 
-    if (!accountReceiver) throw new Error('Receiver account not found');
+    if (!accountReceiver.accountModel)
+      throw new Error('Receiver account not found');
 
-    if (accountSender.balance < input.value) {
+    if (accountSender.accountModel.balance < input.value) {
       throw new Error('Balance is below the value');
     }
+    const senderBalance = Number(accountSender.accountModel.balance);
+    const receiverBalance = Number(accountReceiver.accountModel.balance);
+    const transactionValue = Number(input.value);
 
-    const updateBalanceSender = accountSender.balance - Number(input.value);
+    const updateBalanceSender = senderBalance - transactionValue;
 
     await this.accountRepository.update({
       id: input.sender,
       balance: updateBalanceSender,
     });
 
-    const updateBalanceReceiver = accountReceiver.balance + Number(input.value);
+    const updateBalanceReceiver = receiverBalance + transactionValue;
 
     await this.accountRepository.update({
       id: input.receiver,

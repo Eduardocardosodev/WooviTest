@@ -1,11 +1,9 @@
 import 'reflect-metadata';
 
-import { ApolloServer } from 'apollo-server';
-import Koa from 'koa';
-import Router from '@koa/router';
+import { ApolloServer } from 'apollo-server-koa';
+
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import bodyParser from 'koa-bodyparser';
 
 import schema from './schemaGraphql';
 import UserRepository from '../user/repository/mongoose/user.repository';
@@ -15,11 +13,6 @@ const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const PORT = process.env.PORT || 3000;
 
-// Inicializar o servidor Koa
-// const app = new Koa();
-// const router = new Router();
-
-/// Iniciar o servidor Apollo de forma assíncrona
 const userRepository = new UserRepository();
 
 const server = new ApolloServer({
@@ -35,7 +28,11 @@ const server = new ApolloServer({
   },
 });
 
-// await server.start();
+async function startApolloServer(app: any) {
+  await server.start();
+  server.applyMiddleware({ app, path: '/graphql' });
+}
+
 async function connectDb() {
   try {
     await mongoose.connect(
@@ -43,18 +40,10 @@ async function connectDb() {
     );
     console.log('MongoDB connected');
 
-    // app.use(bodyParser());
-    // app.use(router.routes());
-    // app.use(router.allowedMethods());
-
-    server.listen(PORT, () => {
-      console.log(`Server is listening on port ${PORT}`);
-      console.log(`GraphQL endpoint: http://localhost:${PORT}/graphql`);
-    });
+    return true;
   } catch (error) {
     console.error('MongoDB connection error:', error);
     process.exit(1);
   }
 }
-connectDb();
-// Conectar ao MongoDB e iniciar o servidor Koa
+export { startApolloServer, connectDb };

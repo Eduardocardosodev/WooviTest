@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node src/infrastructure/api/graphql.ts",
+    "dev": "nodemon src/infrastructure/api/server.ts",
     "tsc": "tsc",
     "test": "npm run tsc -- --noEmit && jest --detectOpenHandles"
   },

@@ -22,7 +22,7 @@ export default class FindTransactionUseCase {
       id: transaction.id,
       sender: transaction.sender,
       receiver: transaction.receiver,
-      value: transaction.value,
+      value: Number(transaction.value),
     };
   }
 }

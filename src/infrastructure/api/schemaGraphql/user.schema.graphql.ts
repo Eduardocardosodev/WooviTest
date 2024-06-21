@@ -4,14 +4,14 @@ import { UserSchemaGraphql } from '../../user/repository/mongoose/user.model';
 @ObjectType()
 export class UserSchema implements UserSchemaGraphql {
   @Field((type) => ID, { nullable: true })
-  id: any;
+  id: string;
 
-  @Field({ nullable: false })
+  @Field(() => String, { nullable: false })
   name: string;
 
-  @Field({ nullable: false })
+  @Field(() => String, { nullable: false })
   tax_id: string;
 
-  @Field({ nullable: false })
+  @Field(() => String, { nullable: false })
   password: string;
 }

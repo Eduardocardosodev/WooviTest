@@ -11,6 +11,9 @@ export default class ListAccountUseCase {
 
   async execute(): Promise<OutputListAccountDto[]> {
     const accounts = await this.accountRepository.findAll();
+    if (accounts.length === 0) {
+      throw new Error('Account not found');
+    }
     return accounts;
   }
 }

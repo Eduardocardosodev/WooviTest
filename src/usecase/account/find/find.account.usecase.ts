@@ -11,18 +11,20 @@ export default class FindAccountUseCase {
   async execute(id: string): Promise<OutputFindAccountDto> {
     const account = await this.accountRepository.find(id);
 
-    if (!account) throw new Error('Account not found');
+    if (!account || !account.accountModel) {
+      throw new Error('Account not found');
+    }
 
     return {
-      id: account.id,
-      account_number: account.account_number,
-      user_id: account.user_id,
-      balance: account.balance,
+      id: account.accountModel._id,
+      account_number: account.accountModel.account_number,
+      user_id: account.accountModel.user_id,
+      balance: Number(account.accountModel.balance),
       user: {
-        id: account.user.id,
-        name: account.user.name,
-        tax_id: account.user.tax_id,
-        password: account.user.password,
+        id: account.userModel.id,
+        name: account.userModel.name,
+        tax_id: account.userModel.tax_id,
+        password: account.userModel.password,
       },
     };
   }
