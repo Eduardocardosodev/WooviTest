@@ -12,6 +12,20 @@ import { InputType, Field } from 'type-graphql';
 import { AccountSchema } from '../schemaGraphql/account.schema.graphql';
 import { Length } from 'class-validator';
 
+interface OutPutListAccountGraphQLDto {
+  account: {
+    id: string;
+    account_number: string;
+    balance: number;
+    user_id: string;
+    user: {
+      id: string;
+      name: string;
+      tax_id: string;
+      password: string;
+    };
+  };
+}
 @InputType()
 class UserInput {
   @Field(() => String)
@@ -33,7 +47,18 @@ export class AccountController {
   @Authorized()
   async list() {
     const accounts = await listAccountUseCase.execute();
-    return accounts;
+    return accounts.map((account: any) => ({
+      id: account.account.id,
+      account_number: account.account.account_number,
+      user_id: account.account.user_id,
+      balance: account.account.balance,
+      user: {
+        id: account.account.user.id,
+        name: account.account.user.name,
+        tax_id: account.account.user.tax_id,
+        password: account.account.user.password,
+      },
+    }));
   }
 
   @Query((returns) => AccountSchema, { name: 'account' })

@@ -18,8 +18,9 @@ export interface OutputListAccountDto {
   balance: number;
   user_id: string;
   user: {
+    id: string;
     name: string;
     tax_id: string;
     password: string;
-  }[];
+  };
 }

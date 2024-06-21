@@ -25,7 +25,12 @@ export class TransactionController {
   @Authorized()
   async list() {
     const transactions = await listTransactionUseCase.execute();
-    return transactions;
+    return transactions.map((transactions: any) => ({
+      id: transactions.transactions.id,
+      sender: transactions.transactions.sender,
+      receiver: transactions.transactions.receiver,
+      value: transactions.transactions.value,
+    }));
   }
 
   @Query((returns) => TransactionSchema, { name: 'transaction' })

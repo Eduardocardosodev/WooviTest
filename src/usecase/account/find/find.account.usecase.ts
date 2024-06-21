@@ -14,7 +14,6 @@ export default class FindAccountUseCase {
     if (!account || !account.accountModel) {
       throw new Error('Account not found');
     }
-
     return {
       id: account.accountModel._id,
       account_number: account.accountModel.account_number,

@@ -1,9 +1,9 @@
 import { Field, ObjectType } from 'type-graphql';
-import { AccountSchema } from './account.schema.graphql';
+import { UserSchema } from './user.schema.graphql';
 
 interface IAuth {
   token: string;
-  account: AccountSchema;
+  user: UserSchema;
 }
 
 @ObjectType()
@@ -11,8 +11,8 @@ class AuthSchema implements IAuth {
   @Field(() => String, { nullable: false })
   token: string;
 
-  @Field((type) => AccountSchema, { nullable: true })
-  account: AccountSchema;
+  @Field((type) => UserSchema, { nullable: true })
+  user: UserSchema;
 }
 
 export default AuthSchema;

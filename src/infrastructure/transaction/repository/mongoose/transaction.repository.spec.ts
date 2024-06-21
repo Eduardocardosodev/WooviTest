@@ -73,7 +73,7 @@ describe('transaction repository test', () => {
 
     // Mapeando os usuários para um formato de objeto simples
     const transactionObjects = transactions.map((transaction) => ({
-      _id: transaction.transactions.id,
+      id: transaction.transactions.id,
       sender: transaction.transactions.sender,
       receiver: transaction.transactions.receiver,
       value: transaction.transactions.value,
@@ -81,18 +81,16 @@ describe('transaction repository test', () => {
 
     expect(transactionObjects).toHaveLength(2);
     expect(transactionObjects).toContainEqual({
-      _id: expect.any(String),
+      id: transaction1.id,
       sender: transaction1.sender,
       receiver: transaction1.receiver,
       value: transaction1.value,
-      notification: { errors: [] },
     });
     expect(transactionObjects).toContainEqual({
-      _id: expect.any(String),
+      id: transaction2.id,
       sender: transaction2.sender,
       receiver: transaction2.receiver,
       value: transaction2.value,
-      notification: { errors: [] },
     });
   });
 });

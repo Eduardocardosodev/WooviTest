@@ -38,6 +38,8 @@ export default class AccountRepository implements AccountRepositoryInterface {
     if (!accountModel) {
       throw new Error('Account not found');
     }
+
+    console.log('accoutmode ----', accountModel);
     return {
       accountModel: {
         id: accountModel._id,

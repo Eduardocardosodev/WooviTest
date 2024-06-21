@@ -12,8 +12,8 @@ type AccountSchema {
 }
 
 type AuthSchema {
-  account: AccountSchema
   token: String!
+  user: UserSchema
 }
 
 type Mutation {

@@ -49,7 +49,8 @@ describe('AuthenticateUseCase', () => {
 
     const output = await authenticateUseCase.execute(input);
 
-    expect(output.user).toBeInstanceOf(User);
+    console.log(output);
+
     expect(output.user.id).toBe(mockUser.id);
     expect(output.user.name).toBe(mockUser.name);
     expect(output.user.tax_id).toBe(mockUser.tax_id);

@@ -1,12 +1,14 @@
 import request from 'supertest';
-import { app } from '../koa';
-import { connectDb } from '../graphql';
+import { app, startRouteKoa } from '../koa';
+import { connectDb, startApolloServer } from '../graphql';
 import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 describe('E2E test for account', () => {
   beforeAll(async () => {
     await connectDb();
+    await startRouteKoa();
+    await startApolloServer(app);
   });
 
   afterAll(async () => {
@@ -14,7 +16,7 @@ describe('E2E test for account', () => {
   });
 
   it('should create a account', async () => {
-    const response = await request(app)
+    const response = await request(app.callback())
       .post('/account')
       .send({
         balance: 100,
@@ -33,7 +35,7 @@ describe('E2E test for account', () => {
   });
 
   it('should not create account', async () => {
-    const response = await request(app).post('/account').send({
+    const response = await request(app.callback()).post('/account').send({
       balance: 100,
       user: null,
     });
@@ -43,7 +45,7 @@ describe('E2E test for account', () => {
   it('should list all account', async () => {
     let tax_id = uuidv4();
 
-    const response = await request(app)
+    const response = await request(app.callback())
       .post('/account')
       .send({
         balance: 100,
@@ -54,15 +56,17 @@ describe('E2E test for account', () => {
         },
       });
 
-    const authenticate = await request(app).post('/authenticate').send({
-      tax_id,
-      password: 'password',
-    });
+    const authenticate = await request(app.callback())
+      .post('/authenticate')
+      .send({
+        tax_id,
+        password: 'password',
+      });
 
     let authToken: string = authenticate.body.token;
     expect(response.status).toBe(201);
 
-    const response2 = await request(app)
+    const response2 = await request(app.callback())
       .post('/account')
       .send({
         balance: 102,
@@ -75,7 +79,7 @@ describe('E2E test for account', () => {
 
     expect(response2.status).toBe(201);
 
-    const listResponse = await request(app)
+    const listResponse = await request(app.callback())
       .get('/account')
       .set('Authorization', `Bearer ${authToken}`)
       .send();

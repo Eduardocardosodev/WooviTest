@@ -1,6 +1,7 @@
 import User from '../../../../domain/user/entity/user';
 import UserRepositoryInterface from '../../../../domain/user/repository/user-repository.interface';
 import { UserModel } from './user.model';
+import { OutputFindByTaxIdDto } from './user.repository.dto';
 
 export default class UserRepository implements UserRepositoryInterface {
   async create(entity: User): Promise<void> {
@@ -36,7 +37,7 @@ export default class UserRepository implements UserRepositoryInterface {
     return new User(userModel.name, userModel.tax_id, userModel.password);
   }
 
-  async findByTaxId(tax_id: string): Promise<User> {
+  async findByTaxId(tax_id: string): Promise<OutputFindByTaxIdDto> {
     let userModel;
 
     userModel = await UserModel.findOne({
@@ -47,7 +48,7 @@ export default class UserRepository implements UserRepositoryInterface {
       throw new Error('User not found');
     }
 
-    return new User(userModel.name, userModel.tax_id, userModel.password);
+    return userModel;
   }
 
   async findAll(): Promise<User[]> {
