@@ -14,10 +14,11 @@ export default class Account extends Entity {
     super();
     this._id = uuid();
     this._account_number = uuid();
-    this._user_id = user.id;
+    this._user_id = user ? user.id : '';
     this._balance = balance;
     this._user = user;
     this.validate();
+
     if (this.notification.hasErrors()) {
       throw new NotificationError(this.notification.getErrors());
     }

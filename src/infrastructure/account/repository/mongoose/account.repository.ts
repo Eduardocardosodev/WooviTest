@@ -7,6 +7,7 @@ import { AccountModel } from './account.model';
 export default class AccountRepository implements AccountRepositoryInterface {
   async create(entity: Account): Promise<void> {
     const user = await UserModel.create({
+      _id: entity.user.id,
       name: entity.user.name,
       tax_id: entity.user.tax_id,
       password: entity.user.password,
@@ -14,6 +15,7 @@ export default class AccountRepository implements AccountRepositoryInterface {
     });
 
     await AccountModel.create({
+      _id: entity.id,
       user_id: user.id,
       account_number: entity.account_number,
       balance: entity.balance,
@@ -54,7 +56,6 @@ export default class AccountRepository implements AccountRepositoryInterface {
     await Promise.all(
       accountModels.map(async (accountModel) => {
         const userModel = await UserModel.findById(accountModel.user_id).exec();
-
         const user = new User(
           userModel.name,
           userModel.tax_id,

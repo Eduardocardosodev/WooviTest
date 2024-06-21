@@ -6,7 +6,7 @@ import { TransactionSchema } from './transaction.schema.graphql';
 import { TransactionController } from '../controllers/transaction.controller';
 import AuthSchema from './authenticate.schema.graphql';
 import AuthController from '../controllers/authenticate.controller';
-import AuthMiddleware from '../middlewares/auth';
+import AuthMiddlewareGraphql from '../middlewares/authGraphql';
 const schema = buildSchemaSync({
   resolvers: [
     AccountSchema,
@@ -19,7 +19,7 @@ const schema = buildSchemaSync({
   ],
   emitSchemaFile: true, // Opcional: gerar um arquivo de esquema GraphQL
   validate: true, // Habilitar validação
-  authChecker: AuthMiddleware,
+  authChecker: AuthMiddlewareGraphql,
 });
 
 export default schema;

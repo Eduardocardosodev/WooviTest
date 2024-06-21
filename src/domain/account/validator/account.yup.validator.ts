@@ -12,11 +12,27 @@ export default class AccountYupValidator
         .shape({
           id: yup.string().required('Id is required'),
           balance: yup.string().required('Balance is required'),
+          user: yup
+            .object()
+            .shape({
+              id: yup.string().required('User ID is required'),
+              name: yup.string().required('User name is required'),
+              tax_id: yup.string().required('User tax ID is required'),
+            })
+            .required('User is required'),
         })
         .validateSync(
           {
             id: entity.id,
             balance: entity.balance,
+            user: entity.user
+              ? {
+                  // Protege contra user nulo
+                  id: entity.user.id,
+                  name: entity.user.name,
+                  tax_id: entity.user.tax_id,
+                }
+              : null,
           },
           {
             abortEarly: false,

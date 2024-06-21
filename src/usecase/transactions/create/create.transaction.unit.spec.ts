@@ -1,17 +1,29 @@
-import CreateAccountUseCase from '../../account/create/create.account.usecase';
 import CreateTransactionUseCase from './create.transaction.usecase';
 
 const input = {
-  sender: '1234',
-  receiver: '123',
+  sender: 'existingSenderAccountId',
+  receiver: 'existingReceiverAccountId',
   value: 10,
 };
 
 const MockRepository = () => {
   return {
-    find: jest.fn(),
+    find: jest.fn().mockImplementation((id: string) => {
+      if (id === 'existingSenderAccountId') {
+        return {
+          id: 'existingSenderAccountId',
+          balance: 100,
+        };
+      } else if (id === 'existingReceiverAccountId') {
+        return {
+          id: 'existingReceiverAccountId',
+          balance: 50,
+        };
+      }
+      return null;
+    }),
     findAll: jest.fn(),
-    create: jest.fn(),
+    create: jest.fn().mockImplementation((transaction) => transaction),
     update: jest.fn(),
   };
 };
@@ -29,8 +41,8 @@ describe('Unit Test create transaction use case', () => {
 
     expect(output).toEqual({
       id: expect.any(String),
-      sender: '1234',
-      receiver: '123',
+      sender: 'existingSenderAccountId',
+      receiver: 'existingReceiverAccountId',
       value: 10,
     });
   });
@@ -47,7 +59,7 @@ describe('Unit Test create transaction use case', () => {
     input.sender = '';
 
     await expect(transactionCreateUseCase.execute(input)).rejects.toThrow(
-      'Sender is required'
+      'transaction: Sender is required'
     );
   });
 

@@ -1,9 +1,6 @@
-import mongoose from 'mongoose';
-import AccountFactory from '../../../domain/account/factory/account.factory';
 import AccountRepositoryInterface from '../../../domain/account/repository/account-repository.interface';
 import TransactionFactory from '../../../domain/transaction/factory/transaction.factory';
 import TransactionRepositoryInterface from '../../../domain/transaction/repository/transaction-repository.interface';
-import UserRepositoryInterface from '../../../domain/user/repository/user-repository.interface';
 import {
   InputCreateTransactionDto,
   OutputCreateTransactionDto,
@@ -24,8 +21,18 @@ export default class CreateTransactionUseCase {
   async execute(
     input: InputCreateTransactionDto
   ): Promise<OutputCreateTransactionDto> {
+    const transaction = TransactionFactory.create(
+      input.sender,
+      input.receiver,
+      input.value
+    );
+
     const accountSender = await this.accountRepository.find(input.sender);
     const accountReceiver = await this.accountRepository.find(input.receiver);
+
+    if (!accountSender) throw new Error('Sender account not found');
+
+    if (!accountReceiver) throw new Error('Receiver account not found');
 
     if (accountSender.balance < input.value) {
       throw new Error('Balance is below the value');
@@ -44,12 +51,6 @@ export default class CreateTransactionUseCase {
       id: input.receiver,
       balance: updateBalanceReceiver,
     });
-
-    const transaction = TransactionFactory.create(
-      input.sender,
-      input.receiver,
-      input.value
-    );
 
     await this.transactionRepository.create(transaction);
 

@@ -13,5 +13,13 @@ type Account = {
 };
 
 export interface OutputListAccountDto {
-  accounts: Account[];
+  id: string;
+  account_number: string;
+  balance: number;
+  user_id: string;
+  user: {
+    name: string;
+    tax_id: string;
+    password: string;
+  }[];
 }

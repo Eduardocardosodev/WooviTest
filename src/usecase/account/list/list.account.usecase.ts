@@ -15,21 +15,21 @@ export default class ListAccountUseCase {
   }
 }
 
-class OutputMapper {
-  static toOutput(accounts: Account[]): OutputListAccountDto {
-    return {
-      accounts: accounts.map((account) => ({
-        id: account.id,
-        account_number: account.account_number,
-        user_id: account.user_id,
-        balance: account.balance,
-        user: {
-          id: account.user.id,
-          name: account.user.name,
-          tax_id: account.user.tax_id,
-          password: account.user.password,
-        },
-      })),
-    };
-  }
-}
+// class OutputMapper {
+//   static toOutput(accounts: Account[]): OutputListAccountDto {
+//     return {
+//       accounts: accounts.map((account) => ({
+//         id: account.id,
+//         account_number: account.account_number,
+//         user_id: account.user_id,
+//         balance: account.balance,
+//         user: {
+//           id: account.user.id,
+//           name: account.user.name,
+//           tax_id: account.user.tax_id,
+//           password: account.user.password,
+//         },
+//       })),
+//     };
+//   }
+// }

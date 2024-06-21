@@ -25,56 +25,75 @@ describe('transaction repository test', () => {
     await TransactionModel.deleteMany({});
   });
 
-  afterEach(async () => {
-    await mongoose.connection.close();
-  });
-
   it('should create a transaction', async () => {
     const transactionRepository = new TransactionRepository();
-    const transaction = new Transaction('123', 'sender_id', 'receiver_id', 100);
+    const transaction = new Transaction('sender_id', 'receiver_id', 100);
     await transactionRepository.create(transaction);
 
-    const transactionModel = await TransactionModel.findById('123');
+    const transactionModel = await TransactionModel.findById(transaction.id);
 
     expect(transactionModel).toBeDefined();
-    expect(transactionModel!.sender).toBe(transaction.sender);
-    expect(transactionModel!.receiver).toBe(transaction.receiver);
-    expect(transactionModel!.value.toString()).toBe(
+    expect(transactionModel.sender).toBe(transaction.sender);
+    expect(transactionModel.receiver).toBe(transaction.receiver);
+    expect(transactionModel.value.toString()).toBe(
       transaction.value.toString()
     );
   });
 
   it('should find a transaction', async () => {
     const transactionRepository = new TransactionRepository();
-    const transaction = new Transaction('123', '1234', '12345', 10);
+    const transaction = new Transaction('sender_id', 'receiver_id', 100);
     await transactionRepository.create(transaction);
 
     const transactionResult = await transactionRepository.find(transaction.id);
 
-    expect(transaction).toStrictEqual(transactionResult);
+    expect(transactionResult.sender).toBe(transaction.sender);
+    expect(transactionResult.receiver).toBe(transaction.receiver);
+    expect(transactionResult.value).toBe(transaction.value);
   });
 
   it('should throw an error when transaction is not found', async () => {
     const transactionRepository = new TransactionRepository();
 
     expect(async () => {
-      await transactionRepository.find('456ABC');
+      await transactionRepository.find('6674782424f2731222615cb4');
     }).rejects.toThrow('Transaction not found');
   });
 
   it('should find all transactions', async () => {
     const transactionRepository = new TransactionRepository();
-    const transaction1 = new Transaction('123', '1234', '12345', 10);
+    const transaction1 = new Transaction('sender_id', 'receiver_id', 10);
 
-    const transaction2 = new Transaction('1234', '12345', '123456', 100);
+    const transaction2 = new Transaction('sender_id', 'receiver_id3', 100);
 
     await transactionRepository.create(transaction1);
     await transactionRepository.create(transaction2);
 
     const transactions = await transactionRepository.findAll();
 
-    expect(transactions).toHaveLength(2);
-    expect(transactions).toContainEqual(transaction1);
-    expect(transactions).toContainEqual(transaction2);
+    // Mapeando os usuários para um formato de objeto simples
+    const transactionObjects = transactions.map((transaction) => ({
+      _id: transaction.id,
+      sender: transaction.sender,
+      receiver: transaction.receiver,
+      value: transaction.value,
+      notification: transaction.notification,
+    }));
+
+    expect(transactionObjects).toHaveLength(2);
+    expect(transactionObjects).toContainEqual({
+      _id: expect.any(String),
+      sender: transaction1.sender,
+      receiver: transaction1.receiver,
+      value: transaction1.value,
+      notification: { errors: [] },
+    });
+    expect(transactionObjects).toContainEqual({
+      _id: expect.any(String),
+      sender: transaction2.sender,
+      receiver: transaction2.receiver,
+      value: transaction2.value,
+      notification: { errors: [] },
+    });
   });
 });

@@ -2,9 +2,8 @@ import Router from 'koa-router';
 import AccountRepository from '../../account/repository/mongoose/account.repository';
 import CreateAccountUseCase from '../../../usecase/account/create/create.account.usecase';
 import { InputCreateAccountDto } from '../../../usecase/account/create/create.account.dto';
-import { v4 as uuid } from 'uuid';
-import { authMiddleware } from '../middlewares/auth';
 import FindAccountUseCase from '../../../usecase/account/find/find.account.usecase';
+import { authMiddlewareRoutes } from '../middlewares/authRoutes';
 
 export const accountRoute = new Router();
 
@@ -38,7 +37,7 @@ accountRoute.post('/', async (ctx, next) => {
   }
 });
 
-accountRoute.get('/:id', authMiddleware, async (ctx, next) => {
+accountRoute.get('/:id', authMiddlewareRoutes, async (ctx, next) => {
   const accountRepository = new AccountRepository();
   const findAccountUseCase = new FindAccountUseCase(accountRepository);
 

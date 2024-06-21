@@ -1,4 +1,3 @@
-import { Types } from 'mongoose';
 import { Field, ID, ObjectType } from 'type-graphql';
 import { AccountSchemaGraphql } from '../../account/repository/mongoose/account.model';
 import { UserSchema } from './user.schema.graphql';

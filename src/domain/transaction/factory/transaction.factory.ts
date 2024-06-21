@@ -7,6 +7,6 @@ export default class TransactionFactory {
     receiver: string,
     value: number
   ): Transaction {
-    return new Transaction(uuid(), sender, receiver, value);
+    return new Transaction(sender, receiver, value);
   }
 }

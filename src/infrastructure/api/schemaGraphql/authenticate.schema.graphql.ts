@@ -1,5 +1,4 @@
 import { Field, ObjectType } from 'type-graphql';
-import Account from '../../../domain/account/entity/account';
 import { AccountSchema } from './account.schema.graphql';
 
 interface IAuth {

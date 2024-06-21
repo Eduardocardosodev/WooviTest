@@ -34,7 +34,12 @@ export default class User extends Entity {
   }
 
   validate() {
-    UserValidatorFactory.create().validate(this);
+    try {
+      UserValidatorFactory.create().validate(this);
+    } catch (error) {
+      console.error('Validation failed:', error); // Adicione este log
+      throw error;
+    }
   }
 
   isActive(): boolean {

@@ -5,6 +5,7 @@ import { UserModel } from './user.model';
 export default class UserRepository implements UserRepositoryInterface {
   async create(entity: User): Promise<void> {
     await UserModel.create({
+      _id: entity.id,
       name: entity.name,
       tax_id: entity.tax_id,
       password: entity.password,
@@ -28,12 +29,9 @@ export default class UserRepository implements UserRepositoryInterface {
   }
 
   async find(id: string): Promise<User> {
-    let userModel;
-    try {
-      userModel = await UserModel.findById(id);
-    } catch (error) {
-      throw new Error('User not found');
-    }
+    let userModel = await UserModel.findById(id);
+
+    if (!userModel) throw new Error('User not found');
 
     return new User(userModel.name, userModel.tax_id, userModel.password);
   }

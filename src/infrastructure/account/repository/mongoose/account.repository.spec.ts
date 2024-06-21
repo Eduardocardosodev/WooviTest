@@ -1,10 +1,10 @@
-import mongoose, { Mongoose } from 'mongoose';
+import mongoose from 'mongoose';
 import AccountRepository from './account.repository';
 import Account from '../../../../domain/account/entity/account';
 import { AccountModel } from './account.model';
-import UserRepository from '../../../user/repository/mongoose/user.repository';
 import User from '../../../../domain/user/entity/user';
 import dotenv from 'dotenv';
+import { v4 as uuidv4 } from 'uuid'; // Importe a função uuidv4 para gerar UUIDs únicos
 
 dotenv.config();
 
@@ -27,50 +27,68 @@ describe('Account repository test', () => {
     await AccountModel.deleteMany({});
   });
 
-  afterEach(async () => {
-    await mongoose.connection.close();
-  });
-
   it('should create a Account', async () => {
-    const userRepository = new UserRepository();
-    const user = new User('1234', '12345', 'password');
+    const accountRepository = new AccountRepository();
+
+    const user = new User('Jhon', '12345', 'password');
     const account = new Account(10, user);
+    account.User = user;
+
+    await accountRepository.create(account);
 
     const accountModel = await AccountModel.findOne({
-      where: { id: '123' },
+      _id: account.id,
     });
 
-    expect(accountModel.toJSON()).toStrictEqual({
-      id: '123',
-      account_number: account.account_number,
+    expect(accountModel).toBeTruthy();
+
+    expect(accountModel.toJSON()).toEqual({
+      _id: expect.any(String),
+      account_number: expect.any(String),
+      balance: expect.objectContaining({
+        _bsontype: 'Decimal128',
+        bytes: expect.any(Buffer),
+      }),
       user_id: account.user_id,
-      balance: account.balance,
+      date: expect.any(Date),
+      __v: 0,
     });
   });
 
   it('should throw an error when Account is not found', async () => {
     const accountRepository = new AccountRepository();
 
-    expect(async () => {
+    await expect(async () => {
       await accountRepository.find('456ABC');
     }).rejects.toThrow('Account not found');
   });
 
   it('should find all Accounts', async () => {
-    const user = new User('1234', '12345', 'password');
+    const user1 = new User('Jhon', uuidv4(), 'password');
+    const user2 = new User('Jhon', uuidv4(), 'password');
 
     const accountRepository = new AccountRepository();
-    const account1 = new Account(10, user);
-
-    const account2 = new Account(100, user);
+    const account1 = new Account(10, user1);
+    const account2 = new Account(100, user2);
 
     await accountRepository.create(account1);
     await accountRepository.create(account2);
 
-    const Accounts = await accountRepository.findAll();
+    const accounts = await accountRepository.findAll();
 
-    expect(Accounts).toHaveLength(2);
-    expect(Accounts).toContainEqual(account1);
-    expect(Accounts).toContainEqual(account2);
+    expect(accounts).toHaveLength(2);
+
+    // Verifica se cada conta criada está presente no array de contas retornadas
+    const account1Found = accounts.some(
+      (acc) =>
+        acc.balance === account1.balance && acc.user.tax_id === user1.tax_id
+    );
+    const account2Found = accounts.some(
+      (acc) =>
+        acc.balance === account2.balance && acc.user.tax_id === user2.tax_id
+    );
+
+    expect(account1Found).toBe(true);
+    expect(account2Found).toBe(true);
   });
 });

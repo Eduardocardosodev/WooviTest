@@ -7,7 +7,7 @@ export default class TransactionRepository
 {
   async create(entity: Transaction): Promise<void> {
     await TransactionModel.create({
-      id: entity.id,
+      _id: entity.id,
       sender: entity.sender,
       receiver: entity.receiver,
       value: entity.value,
@@ -18,7 +18,15 @@ export default class TransactionRepository
   async update(entity: Transaction): Promise<void> {}
 
   async find(id: string): Promise<Transaction> {
-    return await TransactionModel.findById(id);
+    const transaction = await TransactionModel.findById(id);
+
+    if (!transaction) throw new Error('Transaction not found');
+
+    return new Transaction(
+      transaction.sender,
+      transaction.receiver,
+      Number(transaction.value)
+    );
   }
 
   async findAll(): Promise<Transaction[]> {
@@ -28,7 +36,6 @@ export default class TransactionRepository
 
     const transactions = transactionModels.map((transactionModels) => {
       let transaction = new Transaction(
-        transactionModels.id,
         transactionModels.sender,
         transactionModels.receiver,
         Number(transactionModels.value)

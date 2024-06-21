@@ -10,6 +10,7 @@ export interface AccountSchemaGraphql {
 }
 
 interface IAccount extends Document {
+  _id: string;
   account_number: string;
   user_id: string;
   balance: mongoose.Types.Decimal128;
@@ -17,6 +18,7 @@ interface IAccount extends Document {
 }
 
 const accountSchema: Schema = new Schema({
+  _id: { type: String, default: uuidv4 },
   account_number: {
     type: String,
     required: true,

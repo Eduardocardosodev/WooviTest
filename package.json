@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --exec ts-node src/infrastructure/api/graphql.ts",
     "tsc": "tsc",
-    "test": "npm run tsc -- --noEmit && jest"
+    "test": "npm run tsc -- --noEmit && jest --detectOpenHandles"
   },
   "keywords": [],
   "author": "",

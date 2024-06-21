@@ -29,7 +29,7 @@ interface Context {
   token?: string;
 }
 
-const AuthMiddleware: AuthChecker<Context> = ({ context }): boolean => {
+const AuthMiddlewareGraphql: AuthChecker<Context> = ({ context }): boolean => {
   const authHeader = context.token;
 
   if (!authHeader) {
@@ -49,4 +49,4 @@ const AuthMiddleware: AuthChecker<Context> = ({ context }): boolean => {
   }
 };
 
-export default AuthMiddleware;
+export default AuthMiddlewareGraphql;
