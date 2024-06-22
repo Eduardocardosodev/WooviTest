@@ -8,7 +8,7 @@
     "tsc": "tsc",
     "test": "npm run tsc -- --noEmit && jest --detectOpenHandles",
     "build": "tsup src/infrastructure/api/server.ts",
-    "start": "node dist/infrastructure/api/server.js"
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
