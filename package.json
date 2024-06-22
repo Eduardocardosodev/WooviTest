@@ -2,11 +2,13 @@
   "name": "woovi",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/infrastructure/api/server.js",
   "scripts": {
     "dev": "nodemon src/infrastructure/api/server.ts",
     "tsc": "tsc",
-    "test": "npm run tsc -- --noEmit && jest --detectOpenHandles"
+    "test": "npm run tsc -- --noEmit && jest --detectOpenHandles",
+    "build": "tsup src/infrastructure/api/server.ts",
+    "start": "node dist/infrastructure/api/server.js"
   },
   "keywords": [],
   "author": "",
