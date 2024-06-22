@@ -35,6 +35,7 @@
     "mongoose": "^8.4.1",
     "reflect-metadata": "^0.2.2",
     "relay-runtime": "^17.0.0",
+    "tsup": "^8.1.0",
     "type-graphql": "^1.0.0",
     "uninstall": "^0.0.0",
     "uuid": "^10.0.0",
