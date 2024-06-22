@@ -20,3 +20,6 @@ https://woovitest.onrender.com/playground
 Endpoint GraphQL para interação com a API:
 
 https://woovitest.onrender.com/graphql
+
+<h4>Postman PDF</h4>
+[WooviBank.postman_collection.json](https://github.com/user-attachments/files/15938062/WooviBank.postman_collection.json)
