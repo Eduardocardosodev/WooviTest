@@ -1,16 +1,26 @@
-import { Arg, Authorized, Mutation, Query, Resolver } from 'type-graphql';
+import {
+  Arg,
+  Authorized,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+} from 'type-graphql';
 import FindAccountUseCase from '../../../usecase/account/find/find.account.usecase';
 import AccountRepository from '../../account/repository/mongoose/account.repository';
 import ListAccountUseCase from '../../../usecase/account/list/list.account.usecase';
 import CreateAccountUseCase from '../../../usecase/account/create/create.account.usecase';
-import User from '../../../domain/user/entity/user';
+import DeleteAccountUseCase from '../../../usecase/account/delete/delete.account.usecase';
 const accountRepository = new AccountRepository();
 const findAccountUseCase = new FindAccountUseCase(accountRepository);
 const listAccountUseCase = new ListAccountUseCase(accountRepository);
 const createAccountUseCase = new CreateAccountUseCase(accountRepository);
+const deleteAccountUseCase = new DeleteAccountUseCase(accountRepository);
+
 import { InputType, Field } from 'type-graphql';
 import { AccountSchema } from '../schemaGraphql/account.schema.graphql';
 import { Length } from 'class-validator';
+import { MessageResponse } from './transaction.controller';
 
 interface OutPutListAccountGraphQLDto {
   account: {
@@ -84,5 +94,15 @@ export class AccountController {
 
     const account = await createAccountUseCase.execute(input);
     return account;
+  }
+
+  @Mutation((returns) => MessageResponse, { name: 'deleteAccount' })
+  async delete(@Arg('id') id: string): Promise<MessageResponse> {
+    const input = {
+      id,
+    };
+
+    await deleteAccountUseCase.execute(input);
+    return { message: 'Account successfully deleted' };
   }
 }

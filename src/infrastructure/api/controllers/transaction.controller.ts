@@ -1,10 +1,19 @@
-import { Arg, Authorized, Mutation, Query, Resolver } from 'type-graphql';
+import {
+  Arg,
+  Authorized,
+  Field,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+} from 'type-graphql';
 import { TransactionSchema } from '../schemaGraphql/transaction.schema.graphql';
 import TransactionRepository from '../../transaction/repository/mongoose/transaction.repository';
 import FindTransactionUseCase from '../../../usecase/transactions/find/find.transaction.usecase';
 import ListTransactionUseCase from '../../../usecase/transactions/list/list.transaction.usecase';
 import CreateTransactionUseCase from '../../../usecase/transactions/create/create.transaction.usecase';
 import AccountRepository from '../../account/repository/mongoose/account.repository';
+import DeletetransactionUseCase from '../../../usecase/transactions/delete/delete.transaction.usecase';
 const transactionRepository = new TransactionRepository();
 const accountRepository = new AccountRepository();
 
@@ -18,6 +27,17 @@ const createTransactionUseCase = new CreateTransactionUseCase(
   transactionRepository,
   accountRepository
 );
+
+const deleteTransactionUseCase = new DeletetransactionUseCase(
+  transactionRepository,
+  accountRepository
+);
+
+@ObjectType()
+export class MessageResponse {
+  @Field()
+  message: string;
+}
 
 @Resolver(TransactionSchema)
 export class TransactionController {
@@ -55,5 +75,16 @@ export class TransactionController {
 
     const account = await createTransactionUseCase.execute(input);
     return account;
+  }
+
+  @Mutation((returns) => MessageResponse, { name: 'deleteTransaction' })
+  @Authorized()
+  async delete(@Arg('id') id: string): Promise<MessageResponse> {
+    const input = {
+      id,
+    };
+
+    await deleteTransactionUseCase.execute(input);
+    return { message: 'Account successfully deleted' };
   }
 }

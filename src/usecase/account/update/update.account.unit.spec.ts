@@ -25,6 +25,7 @@ const MockRepository = () => {
     findAll: jest.fn(),
     find: jest.fn().mockReturnValue(Promise.resolve(account)),
     update: jest.fn(),
+    delete: jest.fn(),
   };
 };
 

@@ -13,6 +13,7 @@ const MockRepository = () => {
     findAll: jest
       .fn()
       .mockReturnValue(Promise.resolve([transaction1, transaction2])),
+    delete: jest.fn(),
   };
 };
 

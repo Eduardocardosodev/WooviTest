@@ -5,6 +5,7 @@ import { InputCreateAccountDto } from '../../../usecase/account/create/create.ac
 import FindAccountUseCase from '../../../usecase/account/find/find.account.usecase';
 import { authMiddlewareRoutes } from '../middlewares/authRoutes';
 import ListAccountUseCase from '../../../usecase/account/list/list.account.usecase';
+import DeleteAccountUseCase from '../../../usecase/account/delete/delete.account.usecase';
 
 export const accountRoute = new Router();
 
@@ -79,5 +80,28 @@ accountRoute.get('/', authMiddlewareRoutes, async (ctx, next) => {
     };
     console.log(error);
     ctx.status = 400;
+  }
+});
+
+accountRoute.delete('/:id', authMiddlewareRoutes, async (ctx, next) => {
+  const accountRepository = new AccountRepository();
+  const deleteAccountUseCase = new DeleteAccountUseCase(accountRepository);
+
+  const { id } = ctx.params;
+
+  try {
+    const output = await deleteAccountUseCase.execute({ id });
+    ctx.body = {
+      message: 'Account delete successfully',
+      data: output,
+    };
+    ctx.status = 200;
+  } catch (error: any) {
+    ctx.body = {
+      message: 'Error deleteing account',
+      error: error.message,
+    };
+    console.log(error);
+    ctx.status = 500;
   }
 });

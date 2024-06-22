@@ -6,6 +6,7 @@ import FindTransactionUseCase from '../../../usecase/transactions/find/find.tran
 import ListTransactionUseCase from '../../../usecase/transactions/list/list.transaction.usecase';
 import AccountRepository from '../../account/repository/mongoose/account.repository';
 import { authMiddlewareRoutes } from '../middlewares/authRoutes';
+import DeletetransactionUseCase from '../../../usecase/transactions/delete/delete.transaction.usecase';
 
 export const transactionRoute = new Router();
 
@@ -80,5 +81,32 @@ transactionRoute.get('/', authMiddlewareRoutes, async (ctx, next) => {
     };
     console.log(error);
     ctx.status = 400;
+  }
+});
+
+transactionRoute.delete('/:id', authMiddlewareRoutes, async (ctx, next) => {
+  const transactionRepository = new TransactionRepository();
+  const accountRepository = new AccountRepository();
+  const deletetransactionUseCase = new DeletetransactionUseCase(
+    transactionRepository,
+    accountRepository
+  );
+
+  const { id } = ctx.params;
+
+  try {
+    const output = await deletetransactionUseCase.execute({ id });
+    ctx.body = {
+      message: 'transaction delete successfully',
+      data: output,
+    };
+    ctx.status = 200;
+  } catch (error: any) {
+    ctx.body = {
+      message: 'Error deleteing transaction',
+      error: error.message,
+    };
+    console.log(error);
+    ctx.status = 500;
   }
 });

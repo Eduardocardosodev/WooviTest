@@ -6,6 +6,14 @@ import { OutputFindAllTransactionDto } from './transaction.repository.dto';
 export default class TransactionRepository
   implements TransactionRepositoryInterface
 {
+  async delete(id: string): Promise<any> {
+    const transactionDeleted = await TransactionModel.findByIdAndDelete(id);
+    if (!transactionDeleted) {
+      throw new Error('Transaction not found');
+    }
+
+    return transactionDeleted;
+  }
   async create(entity: Transaction): Promise<void> {
     await TransactionModel.create({
       _id: entity.id,

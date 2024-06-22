@@ -16,9 +16,15 @@ type AuthSchema {
   user: UserSchema
 }
 
+type MessageResponse {
+  message: String!
+}
+
 type Mutation {
   createAccount(balance: Float!, user: UserInput!): AccountSchema!
   createTransaction(receiver: String!, sender: String!, value: Float!): TransactionSchema!
+  deleteAccount(id: String!): MessageResponse!
+  deleteTransaction(id: String!): MessageResponse!
   signIn(password: String!, tax_id: String!): AuthSchema!
 }
 

@@ -6,6 +6,13 @@ import { AccountModel } from './account.model';
 import { OutputFindAllAccountDto } from './account.repository.dto';
 
 export default class AccountRepository implements AccountRepositoryInterface {
+  async delete(id: string): Promise<void> {
+    const accountDeleted = await AccountModel.findByIdAndDelete(id);
+    if (!accountDeleted) {
+      throw new Error('Account not found');
+    }
+    await UserModel.findByIdAndDelete(accountDeleted.user_id);
+  }
   async create(entity: Account): Promise<void> {
     const user = await UserModel.create({
       _id: entity.user.id,
@@ -39,7 +46,6 @@ export default class AccountRepository implements AccountRepositoryInterface {
       throw new Error('Account not found');
     }
 
-    console.log('accoutmode ----', accountModel);
     return {
       accountModel: {
         id: accountModel._id,

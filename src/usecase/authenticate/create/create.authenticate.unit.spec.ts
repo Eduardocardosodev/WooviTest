@@ -37,6 +37,7 @@ describe('AuthenticateUseCase', () => {
     update: jest.fn(),
     find: jest.fn(),
     findAll: jest.fn(),
+    delete: jest.fn(),
   };
 
   const authenticateUseCase = new AuthenticateUseCase(mockUserRepository);

@@ -3,6 +3,7 @@ export default interface RepositoryInterface<T> {
   update(entity: T | null): Promise<void>;
   find(id: string): Promise<T>;
   findAll(): Promise<T[]>;
+  delete(id: string): Promise<T>;
 }
 
 // export default interface RepositoryInterfaceUser<T> {

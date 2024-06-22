@@ -4,6 +4,9 @@ import { UserModel } from './user.model';
 import { OutputFindByTaxIdDto } from './user.repository.dto';
 
 export default class UserRepository implements UserRepositoryInterface {
+  async delete(id: string): Promise<User> {
+    return await UserModel.findByIdAndDelete(id);
+  }
   async create(entity: User): Promise<void> {
     await UserModel.create({
       _id: entity.id,
